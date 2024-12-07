@@ -21,8 +21,10 @@ class AI:
         # This AI just tries to win or block the opponent from winning
         for col in range(len(board[0])):
             if self.can_win(board, col, self.token):
+                print ("Playing winning move")
                 return col
             if self.can_win(board, col, 3 - self.token):  # Opponent's token
+                print ("Blocking opponent")
                 return col
         # If no immediate win or block, choose a random column
         import random

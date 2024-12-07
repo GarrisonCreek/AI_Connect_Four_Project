@@ -5,6 +5,8 @@ import sys
 import math
 import random
 from ai import AI
+from minimaxAI import minimaxAI
+from multiprocessing import Pool
 
 # Constants
 ROW_COUNT = 6
@@ -33,7 +35,6 @@ game_type = 0 # 0 means unselected, 1 means player vs player, 2 means player vs 
 
 # setting variables for AI
 pause_for_game_over = True
-
 
 def drop_token(board, col, token):
     for row in range(ROW_COUNT-1, -1, -1):
@@ -126,6 +127,18 @@ def check_draw(board):
         for col in range(COLUMN_COUNT):
             if board[row][col] == 0:
                 return False
+    
+    if game_type == 1:
+        print("It's a draw!")
+
+    elif game_type == 2:
+        print("It's a draw!")
+        ai.draws += 1
+
+    if game_type == 3:
+        print("It's a draw!")
+        ai1.draws += 1
+        ai2.draws += 1
     return True
 
 def reset_game():
@@ -289,12 +302,15 @@ while running:
                 elif event.key == pygame.K_2: # select player vs AI
                     game_type = 2
                     # initialize AI
-                    ai = AI(2)
+                    # ai = AI(2) #dumb AI
+                    ai = minimaxAI(2, 5) #smart AI
+
                 elif event.key == pygame.K_3: # select AI vs AI
                     game_type = 3
-                    # initialize AI
-                    ai1 = AI(1)
-                    ai2 = AI(2)
+                    # initialize AI for AI vs AI
+                    ai1 = minimaxAI(1, 4)
+                    # ai2 = AI(2)
+                    ai2 = minimaxAI(2, 4)
 
             # player vs player
             elif game_type == 1:
