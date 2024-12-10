@@ -1,10 +1,8 @@
 #  Connect Four Game with AI and Pygame
 
 
-# this AI is simple and not very smart
-# it just tries to win or block the opponent from winning
-# it doesn't look ahead to see if it can win in the next move
-
+# Temporary simple AI for Connect Four for testing purposes, not in use anymore
+# This AI, blocks when it sees 3 in a row, and tries to win when it has 3 in a row, otherwise it plays randomly
 
 class AI:
 
