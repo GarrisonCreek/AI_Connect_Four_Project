@@ -132,9 +132,9 @@ class minimaxAI:
         for row in range(len(board)):
             for col in range(len(board[0])):
                 if self.check_direction(board, row, col, token, 1, 0) or \
-                   self.check_direction(board, row, col, token, 0, 1) or \
-                   self.check_direction(board, row, col, token, 1, 1) or \
-                   self.check_direction(board, row, col, token, 1, -1):
+                    self.check_direction(board, row, col, token, 0, 1) or \
+                    self.check_direction(board, row, col, token, 1, 1) or \
+                    self.check_direction(board, row, col, token, 1, -1):
                     return True
         return False
 
