@@ -1,12 +1,14 @@
 import random
 import math
 import copy
-
+from constants import *
+import time
 
 class MCTS_AI:
-    def __init__(self, player, iterations):
+    def __init__(self, player, time_limit=5):
         self.player = player
-        self.iterations = iterations
+        self.iterations = 0
+        self.time_limit = time_limit
         self.wins = 0
         self.losses = 0
         self.draws = 0
@@ -21,12 +23,12 @@ class MCTS_AI:
             self.wins = 0
             self.losses = 0
 
-        def ucb1(self, total_simulations):
+        def ucb1(self, total_simulations): # Upper Confidence Bound 1
             if self.visits == 0:
-                return float('inf')  # Encourage exploration of unvisited nodes
-            win_rate = self.wins / self.visits
-            exploration_factor = math.sqrt(math.log(total_simulations) / self.visits)
-            return win_rate + exploration_factor
+                return math.inf
+            exploitation = self.wins / self.visits
+            exploration = math.sqrt(2 * math.log(total_simulations) / self.visits)
+            return exploitation + exploration
 
     def get_legal_actions(self, board):
         legal_moves = [col for col in range(len(board[0])) if board[0][col] == 0]
@@ -68,23 +70,25 @@ class MCTS_AI:
                 board[row][col] = player
                 return
 
-    def check_win(self, board, player):
-        rows, cols = len(board), len(board[0])
-        for col in range(cols - 3):  # Horizontal
-            for row in range(rows):
-                if all(board[row][col + i] == player for i in range(4)):
+    def check_win(self, board, token):
+        self.winning_player = token
+        for col in range(COLUMN_COUNT-3): # check for win horizontally
+            for row in range(ROW_COUNT):
+                if board[row][col] == token and board[row][col+1] == token and board[row][col+2] == token and board[row][col+3] == token:
                     return True
-        for col in range(cols):  # Vertical
-            for row in range(rows - 3):
-                if all(board[row + i][col] == player for i in range(4)):
+        for col in range(COLUMN_COUNT): # check for win vertically
+            for row in range(ROW_COUNT-3):
+                if board[row][col] == token and board[row+1][col] == token and board[row+2][col] == token and board[row+3][col] == token:
                     return True
-        for col in range(cols - 3):  # Diagonal
-            for row in range(rows - 3):
-                if all(board[row + i][col + i] == player for i in range(4)):
+        for col in range(COLUMN_COUNT-3): # check for win diagonally
+            for row in range(ROW_COUNT-3):
+                if board[row][col] == token and board[row+1][col+1] == token and board[row+2][col+2] == token and board[row+3][col+3] == token:
                     return True
-            for row in range(3, rows):
-                if all(board[row - i][col + i] == player for i in range(4)):
+        for col in range(COLUMN_COUNT-3): # check for win diagonally
+            for row in range(3, ROW_COUNT):
+                if board[row][col] == token and board[row-1][col+1] == token and board[row-2][col+2] == token and board[row-3][col+3] == token:
                     return True
+        self.winning_player = 0
         return False
 
     def expand_node(self, node):
@@ -98,11 +102,10 @@ class MCTS_AI:
     def backpropagate(self, node, result):
         while node:
             node.visits += 1
-            if result == self.player:  # AI wins
+            if result == self.player:
                 node.wins += 1
-            elif result == 3 - self.player:  # AI loses
+            else:
                 node.losses += 1
-            # Draws do not affect wins/losses
             node = node.parent
 
     def best_move(self, root):
@@ -110,9 +113,11 @@ class MCTS_AI:
 
     def evaluate_board(self, board):
         root = self.Node(copy.deepcopy(board))
+        start_time = time.time()  # Record the start time
 
-        # Run simulations
-        for iteration in range(self.iterations):
+        # Run simulations until the time limit is reached
+        while time.time() - start_time < self.time_limit:
+            self.iterations += 1
             node = root
 
             # Selection
@@ -120,22 +125,13 @@ class MCTS_AI:
                 node = max(node.children, key=lambda child: child.ucb1(root.visits))
 
             # Expansion
-            if node.visits > 0 and not node.children:
+            if node.visits == 0:
                 self.expand_node(node)
-
-            if node.children:
                 node = random.choice(node.children)
 
-            # # Defensive check: Block immediate win  TODO: Fix this
-            # legal_moves = self.get_legal_actions(node.state)
-            # for move in legal_moves:
-            #     temp_board = copy.deepcopy(node.state)
-            #     self.make_move(temp_board, move, 3 - self.player)  # Opponent's move
-            #     if self.check_win(temp_board, 3 - self.player):  # If opponent wins
-            #         # Force block this move by choosing it
-            #         return move
-
+            # Simulation
             result = self.simulate_game(copy.deepcopy(node.state), self.player)
+
             # Backpropagation
             self.backpropagate(node, result)
 
@@ -146,10 +142,16 @@ class MCTS_AI:
             self.make_move(temp_board, child.move, self.player)
 
             # Check if the opponent can win immediately after this move
-            opponent_can_win = any(
-                self.check_win(copy.deepcopy(temp_board), 3 - self.player)
-                for move in self.get_legal_actions(temp_board)
-            )
+            opponent_can_win = False
+            for move in self.get_legal_actions(temp_board):
+                temp_board2 = copy.deepcopy(temp_board)
+                self.make_move(temp_board2, move, 3 - self.player)
+                if self.check_win(temp_board2, self.player):
+                    print("Overiding for insta win") # TODO: REMOVE THIS LINE
+                    return child.move
+                if self.check_win(temp_board2, 3 - self.player):
+                    opponent_can_win = True
+                    break
 
             if opponent_can_win:
                 print(f"Move {child.move} allows opponent to win! Ignoring this move.")
@@ -167,9 +169,11 @@ class MCTS_AI:
             win_rate = child.wins / child.visits
             loss_rate = child.losses / child.visits
             print(f"Move: {child.move}, Visits: {child.visits}, Wins: {child.wins}, "
-                f"Losses: {child.losses}, Win Rate: {win_rate:.2f}, "
-                f"Loss Rate: {loss_rate:.2f}, UCB1: {child.ucb1(root.visits):.2f}")
+                  f"Losses: {child.losses}, Win Rate: {win_rate:.2f}, "
+                  f"Loss Rate: {loss_rate:.2f}, UCB1: {child.ucb1(root.visits):.2f}")
 
         print(f"Selected Move: {best_child.move}")
+        print(f"Total Iterations: {self.iterations}")
         print(f"Predicted Win Rate for Best Move: {best_child.wins / best_child.visits:.2f}")
+        self.iterations = 0 # Reset the iteration count
         return best_child.move

@@ -23,14 +23,14 @@ class ConnectFour:
         elif selected_game_type == 2:
             print("Game type selected: Player vs AI")
             # self.ai1 = minimaxAI(2, 4)
-            self.ai1 = MCTS_AI(2, iterations=2000)
+            self.ai1 = MCTS_AI(2, time_limit = 5.0)
 
         elif selected_game_type == 3:
             print("Game type selected: AI vs AI")
             # self.ai1 = minimaxAI(1, 4)
-            self.ai1 = MCTS_AI(1, iterations=1000)
+            self.ai1 = MCTS_AI(1, time_limit=2.5)
             # self.ai2 = minimaxAI(2, 4)
-            self.ai2 = MCTS_AI(2, iterations=1000)
+            self.ai2 = MCTS_AI(2, time_limit=10.0)
 
     def drop_token(self, col):
         for row in range(ROW_COUNT-1, -1, -1):
@@ -119,6 +119,7 @@ class ConnectFour:
                 col = self.ai2.evaluate_board(self.board)
                 self.drop_token(col)
 
+# Handles all mouse and keyboard events to play the game
     def handle_event(self, event):
         if event.type == pygame.QUIT:
             return False
@@ -130,7 +131,7 @@ class ConnectFour:
             elif event.key == pygame.K_TAB: # reset game with 'tab' key
                 self.reset_game()
                 self.select_game_type(0)
-            elif event.key == pygame.K_h: # print out all legal moves with 'h' key
+            elif event.key == pygame.K_h: # print out all legal moves with 'h' key TODO: this lol
                 # print(self.get_legal_actions())
                 print ("TODO fix tis")
             if self.game_type == 0:
@@ -177,6 +178,7 @@ class ConnectFour:
                     self.drop_token(6)
         return True
 
+# Handles all of the rendering for the game
     def render(self, screen):
         screen.fill(BACKGROUND_COLOR)
         if self.game_type == 0:
