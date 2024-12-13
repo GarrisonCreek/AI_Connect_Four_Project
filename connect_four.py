@@ -28,10 +28,18 @@ class ConnectFour:
 
         elif selected_game_type == 3:
             print("Game type selected: AI vs AI")
-            # self.ai1 = minimaxAI(1, 4)
+            # self.ai1 = MCTS_AI(2, time_limit=10.0)
             self.ai1 = MCTS_AI(1, time_limit= 5.0)
             self.ai2 = minimaxAI(2, time_limit= 5.0)
             # self.ai2 = MCTS_AI(2, time_limit=10.0)
+
+        elif selected_game_type == 4:
+            print("Game type selected: AI (Minimax) vs AI (Monte Carlo)")
+            # self.ai1 = minimaxAI(1, 4)
+            self.ai1 = minimaxAI(1, time_limit=5.0)
+            self.ai2 = MCTS_AI(2, time_limit=5.0)
+            # self.ai2 = MCTS_AI(2, time_limit=10.0)
+
 
     def drop_token(self, col):
         self.number_of_moves += 1
@@ -43,7 +51,7 @@ class ConnectFour:
                     if self.game_type == 2:
                         self.ai1.wins += 1
                         self.game_over = True
-                    elif self.game_type == 3:
+                    elif self.game_type == 3 or self.game_type == 4:
                         if self.current_player == 1:
                             self.ai1.wins += 1
                             self.ai2.losses += 1
@@ -113,7 +121,7 @@ class ConnectFour:
         if self.game_type == 2 and self.current_player == 2:
             col = self.ai1.evaluate_board(self.board)
             self.drop_token(col)
-        elif self.game_type == 3:
+        elif self.game_type == 3 or self.game_type == 4:
             if self.current_player == 1:
                 col = self.ai1.evaluate_board(self.board)
                 self.drop_token(col)
@@ -143,6 +151,8 @@ class ConnectFour:
                     self.select_game_type(2)
                 elif event.key == pygame.K_3: # select game type with '3' key
                     self.select_game_type(3)
+                elif event.key == pygame.K_4: # select game type with '4' key
+                    self.select_game_type(4)
             elif self.game_type == 1 or self.game_type == 2 and not self.game_over:
                 if event.key == pygame.K_1:
                     self.drop_token(0)
@@ -158,7 +168,7 @@ class ConnectFour:
                     self.drop_token(5)
                 elif event.key == pygame.K_7:
                     self.drop_token(6)
-            elif self.game_type == 3:
+            elif self.game_type == 3 or self.game_type == 4:
                 if event.key == pygame.K_c: # continue game with 'c' key
                     self.pause_for_game_over = not self.pause_for_game_over
         elif event.type == pygame.MOUSEBUTTONDOWN:

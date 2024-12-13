@@ -20,7 +20,7 @@ while running:
 
     if not game.game_over:
         game.ai_move()
-    elif game.game_type == 3 and not game.pause_for_game_over:
+    elif (game.game_type == 3 or game.game_type == 4) and not game.pause_for_game_over:
         game.reset_game()
 
     game.render(screen)
