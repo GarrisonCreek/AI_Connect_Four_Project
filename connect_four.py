@@ -14,6 +14,7 @@ class ConnectFour:
         self.pause_for_game_over = True
         self.ai1 = None
         self.ai2 = None
+        self.number_of_moves = 0
 
     def select_game_type(self, selected_game_type):
         self.game_type = selected_game_type
@@ -22,17 +23,18 @@ class ConnectFour:
 
         elif selected_game_type == 2:
             print("Game type selected: Player vs AI")
-            # self.ai1 = minimaxAI(2, 4)
-            self.ai1 = MCTS_AI(2, time_limit = 5.0)
+            self.ai1 = minimaxAI(2, 5)
+            # self.ai1 = MCTS_AI(2, time_limit = 5.0)
 
         elif selected_game_type == 3:
             print("Game type selected: AI vs AI")
             # self.ai1 = minimaxAI(1, 4)
-            self.ai1 = MCTS_AI(1, time_limit=2.5)
-            # self.ai2 = minimaxAI(2, 4)
-            self.ai2 = MCTS_AI(2, time_limit=10.0)
+            self.ai1 = MCTS_AI(1, time_limit= 5.0)
+            self.ai2 = minimaxAI(2, time_limit= 5.0)
+            # self.ai2 = MCTS_AI(2, time_limit=10.0)
 
     def drop_token(self, col):
+        self.number_of_moves += 1
         for row in range(ROW_COUNT-1, -1, -1):
             if self.board[row][col] == 0:
                 self.board[row][col] = self.current_player
@@ -50,7 +52,7 @@ class ConnectFour:
                             self.ai2.wins += 1
                         self.game_over = True
                     self.game_over = True
-                if row == 0 and self.check_draw():
+                if self.check_draw():
                     print("It's a draw!")
                     if self.game_type == 2:
                         self.ai1.draws += 1
