@@ -49,6 +49,27 @@ def draw_side_panel(screen, current_player, game_type, ai1, ai2):
     text_rect = text.get_rect(center=(x_loc + 150, y_loc + 50))
     screen.blit(text, text_rect)
 
+    if game_type == 2:
+        font = pygame.font.Font(None, 40)
+        text = font.render("Player 2", True, "white")
+        text_rect = text.get_rect(center=(x_loc + 150, y_loc + 400))
+        screen.blit(text, text_rect)
+
+        font = pygame.font.Font(None, 40)
+        text = font.render(f"Wins: {ai1.wins}", True, "white")
+        text_rect = text.get_rect(center=(x_loc + 150, y_loc + 450))
+        screen.blit(text, text_rect)
+
+        font = pygame.font.Font(None, 40)
+        text = font.render(f"Losses: {ai1.losses}", True, "white")
+        text_rect = text.get_rect(center=(x_loc + 150, y_loc + 500))
+        screen.blit(text, text_rect)
+
+        font = pygame.font.Font(None, 40)
+        text = font.render(f"Draws: {ai1.draws}", True, "white")
+        text_rect = text.get_rect(center=(x_loc + 150, y_loc + 550))
+        screen.blit(text, text_rect)
+
     # draws ai1 stats
     if game_type == 3:
         font = pygame.font.Font(None, 40)
