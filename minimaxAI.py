@@ -49,11 +49,11 @@ class minimaxAI:
         # Check time limit
         if time.time() - self.start_time > self.time_limit:
             return 0  # Neutral score if out of time
-        
+
         # Check if game is over or depth limit reached
         if depth == 0 or self.check_win(board, 1) or self.check_win(board, 2) or self.check_draw(board):
             return self.score_board(board, self.token)
-        
+
         if is_maximizing:
             best_score = -math.inf
             for col in self.get_valid_moves(board):

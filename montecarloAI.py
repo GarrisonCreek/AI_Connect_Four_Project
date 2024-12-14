@@ -169,8 +169,8 @@ class MCTS_AI:
             win_rate = child.wins / child.visits
             loss_rate = child.losses / child.visits
             print(f"Move: {child.move}, Visits: {child.visits}, Wins: {child.wins}, "
-                  f"Losses: {child.losses}, Win Rate: {win_rate:.2f}, "
-                  f"Loss Rate: {loss_rate:.2f}, UCB1: {child.ucb1(root.visits):.2f}")
+                f"Losses: {child.losses}, Win Rate: {win_rate:.2f}, "
+                f"Loss Rate: {loss_rate:.2f}, UCB1: {child.ucb1(root.visits):.2f}")
 
         print(f"Selected Move: {best_child.move}")
         print(f"Total Iterations: {self.iterations}")

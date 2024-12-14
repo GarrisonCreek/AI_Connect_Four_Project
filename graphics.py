@@ -114,6 +114,49 @@ def draw_side_panel(screen, current_player, game_type, ai1, ai2):
         text_rect = text.get_rect(center=(x_loc + 150, y_loc + 550))
         screen.blit(text, text_rect)
 
+    if game_type == 4:
+        font = pygame.font.Font(None, 40)
+        text = font.render("AI 1 (Minimax)", True, "white")
+        text_rect = text.get_rect(center=(x_loc + 150, y_loc + 150))
+        screen.blit(text, text_rect)
+
+        font = pygame.font.Font(None, 40)
+        text = font.render(f"Wins: {ai1.wins}", True, "white")
+        text_rect = text.get_rect(center=(x_loc + 150, y_loc + 200))
+        screen.blit(text, text_rect)
+
+        font = pygame.font.Font(None, 40)
+        text = font.render(f"Losses: {ai1.losses}", True, "white")
+        text_rect = text.get_rect(center=(x_loc + 150, y_loc + 250))
+        screen.blit(text, text_rect)
+
+        font = pygame.font.Font(None, 40)
+        text = font.render(f"Draws: {ai1.draws}", True, "white")
+        text_rect = text.get_rect(center=(x_loc + 150, y_loc + 300))
+        screen.blit(text, text_rect)
+
+    # draws ai2 stats
+    if game_type == 4:
+        font = pygame.font.Font(None, 40)
+        text = font.render("AI 2 (Monte Carlo)", True, "white")
+        text_rect = text.get_rect(center=(x_loc + 150, y_loc + 400))
+        screen.blit(text, text_rect)
+
+        font = pygame.font.Font(None, 40)
+        text = font.render(f"Wins: {ai2.wins}", True, "white")
+        text_rect = text.get_rect(center=(x_loc + 150, y_loc + 450))
+        screen.blit(text, text_rect)
+
+        font = pygame.font.Font(None, 40)
+        text = font.render(f"Losses: {ai2.losses}", True, "white")
+        text_rect = text.get_rect(center=(x_loc + 150, y_loc + 500))
+        screen.blit(text, text_rect)
+
+        font = pygame.font.Font(None, 40)
+        text = font.render(f"Draws: {ai2.draws}", True, "white")
+        text_rect = text.get_rect(center=(x_loc + 150, y_loc + 550))
+        screen.blit(text, text_rect)
+
 def draw_selection_screen(screen):
     # draws the selection screen
     font = pygame.font.Font(None, 74)
@@ -140,6 +183,12 @@ def draw_selection_screen(screen):
     # draws the AI vs AI button
     pygame.draw.rect(screen, "black", (screen.get_width()/2-125+325, screen.get_height()/2, 250, 100))
     font = pygame.font.Font(None, 40)
-    text = font.render("AI vs AI", True, "white")
+    text = font.render("MCST vs minimax", True, "white")
     text_rect = text.get_rect(center=(screen.get_width()/2+325, screen.get_height()/2+50))
+    screen.blit(text, text_rect)
+    # draws the option four button
+    pygame.draw.rect(screen, "black", (screen.get_width() / 2 - 225, screen.get_height() / 2 + 150, 450, 100)) 
+    font = pygame.font.Font(None, 40)
+    text = font.render("AI (Minimax) vs AI (Monte Carlo)", True, "white")
+    text_rect = text.get_rect(center=(screen.get_width() / 2, screen.get_height() / 2 + 200))
     screen.blit(text, text_rect)
