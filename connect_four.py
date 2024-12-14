@@ -31,7 +31,7 @@ class ConnectFour:
             # self.ai1 = MCTS_AI(2, time_limit=10.0)
             self.ai1 = MCTS_AI(1, time_limit= 5.0)
             self.ai2 = minimaxAI(2, time_limit= 5.0)
-            # self.ai2 = MCTS_AI(2, time_limit=10.0)
+            # self.ai2 = minimaxAI(1, 4)
 
         elif selected_game_type == 4:
             print("Game type selected: AI (Minimax) vs AI (Monte Carlo)")
