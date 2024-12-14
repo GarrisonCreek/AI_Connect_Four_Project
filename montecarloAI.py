@@ -23,7 +23,7 @@ class MCTS_AI:
             self.wins = 0
             self.losses = 0
 
-        def ucb1(self, total_simulations): # Upper Confidence Bound 1
+        def ucb1(self, total_simulations): # Upper Confidence Bound
             if self.visits == 0:
                 return math.inf
             exploitation = self.wins / self.visits

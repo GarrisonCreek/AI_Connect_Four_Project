@@ -22,8 +22,8 @@ class ConnectFour:
 
         elif selected_game_type == 2:
             print("Game type selected: Player vs AI")
-            self.ai1 = minimaxAI(2, 5)
-            # self.ai1 = MCTS_AI(2, time_limit = 5.0)
+            # self.ai1 = minimaxAI(2, 5)
+            self.ai1 = MCTS_AI(2, time_limit = 10.0)
 
         elif selected_game_type == 3:
             print("Game type selected: AI vs AI")
@@ -63,7 +63,7 @@ class ConnectFour:
                     if self.game_type == 2:
                         self.ai1.draws += 1
                         self.game_over = True
-                    elif self.game_type == 3:
+                    elif self.game_type == 3 or self.game_type == 4:
                         self.ai1.draws += 1
                         self.ai2.draws += 1
                         self.game_over = True

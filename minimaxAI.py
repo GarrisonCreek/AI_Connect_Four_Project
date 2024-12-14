@@ -151,7 +151,6 @@ class minimaxAI:
         return False
 
 
-
     def get_next_open_row(self, board, col):
         for row in range(len(board) - 1, -1, -1):
             if board[row][col] == 0:
